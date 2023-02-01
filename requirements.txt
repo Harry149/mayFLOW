@@ -43,7 +43,6 @@ PySocks==1.7.1
 pystyle==2.9
 python-dotenv==0.21.1
 pytweening==1.0.4
-pywin32==305
 PyYAML==6.0
 requests==2.25.1
 selenium==4.7.2
