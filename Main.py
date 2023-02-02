@@ -246,11 +246,11 @@ async def say(ctx, *, message: str):
 
 @client.command(name='mute')
 @commands.has_role(1067618350861127700)
-async def mute(ctx, member: discord.Member, time: int):
+async def mute(ctx, member: discord.Member, time: float):
     for channel in ctx.guild.channels:
         await channel.set_permissions(member, send_messages=False)
-    await ctx.send(f"{member.mention} has been muted for {time} seconds.")
-    await asyncio.sleep(time)
+    await ctx.send(f"{member.mention} has been muted for {time} minutes.")
+    await asyncio.sleep(time * 60)
     for channel in ctx.guild.channels:
         await channel.set_permissions(member, send_messages=None)
     await ctx.send(f"{member.mention} has been unmuted.")
