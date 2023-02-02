@@ -609,7 +609,7 @@ async def eval(ctx, *, code):
         await ctx.send(f'**Error**```py\n{learntofuckingcode}```')
 
 @client.command(name='gtban')
-@commands.check(botowners)
+@commands.has_role(989971693743263805)
 async def gtban(ctx, user, time: int):
     plrdata1 = Users.User(user)
     plrid1 = str(plrdata1.Id)
