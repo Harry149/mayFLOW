@@ -1,3 +1,5 @@
+
+
 import discord
 import os
 from discord.ext import commands
@@ -241,6 +243,14 @@ async def say(ctx, *, message: str):
     await ctx.message.delete()
     await ctx.send(message)
 
+'''@client.command()
+@commands.has_role(1067618350861127700)
+async def kick(ctx, member: discord.member, *, reason):
+    if member == "":
+        await ctx.send(f"{ctx.author} Please enter a valid user")
+    else:
+        await client.kick(member, reason=reason)'''
+
 @client.command(name='mute')
 @commands.has_role(1067618350861127700)
 async def mute_user(ctx, member: discord.Member, time: float):
@@ -330,7 +340,6 @@ async def rank(ctx, username: str, rank_name: str):
     else:
         await ctx.send("Rank not found")
         return
-
     
     # Assign rank
     data = {
