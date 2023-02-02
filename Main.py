@@ -253,7 +253,7 @@ async def mute(ctx, member: discord.Member, time: float):
     await asyncio.sleep(time * 60)
     for channel in ctx.guild.channels:
         await channel.set_permissions(member, send_messages=None)
-    await ctx.send(f"{member.mention} has been unmuted.")
+    await ctx.send(f"{member.mention} has been unmuted.")'''
 
 
 @client.command(name='unmute')
@@ -267,7 +267,7 @@ async def unmute(ctx, member: discord.Member):
             await channel.set_permissions(member, send_messages=None)
     await ctx.send(f"{member.mention} has been unmuted.")
     for channel, original_permission in original_permissions.items():
-        await channel.set_permissions(member, **original_permission)'''
+        await channel.set_permissions(member, **original_permission)
 
 
 @client.command(name='check')
