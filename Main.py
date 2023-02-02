@@ -408,6 +408,9 @@ async def help(ctx):
     embed.add_field(name='check', value='checks if someone is verified', inline=False)
     embed.add_field(name='checkid', value='Checks someones UserID and returns their Username', inline=False)
     embed.add_field(name='checkserv', value='Checks the game for any running servers and how many people are in it', inline=False)
+    embed.add_field(name='register', value='register a roblox username to a department', inline=False)
+    embed.add_field(name='registerlist', value='check the list of registered users', inline=False)
+    embed.add_field(name='unregister', value='removes someone from the list of registered people', inline=False)
     embed.set_footer(text='Note: The names of the commands are case-sensitive.')
     await ctx.send(embed=embed)
 
@@ -419,6 +422,69 @@ async def shutdown(ctx):
         await client.close()
     else:
         await ctx.send("You dont have sufficient permissions to perform this action!")
+
+@client.command()
+async def register(ctx, username: str, rank: str):
+    # Check if the file exists, and create it if it doesn't
+    file_path = "user_data.txt"
+    if not os.path.exists(file_path):
+        with open(file_path, "w") as file:
+            file.write("")
+
+    # Write the user's information to the file
+    with open(file_path, "a") as file:
+        file.write(f"{ctx.author.id}:{username}:{rank}\n")
+
+    await ctx.send(f"{ctx.author.name} has been registered as {username} with rank {rank}")
+
+@client.command(name='registerlist')
+async def list_users(ctx):
+    file_path = "user_data.txt"
+    if not os.path.exists(file_path):
+        await ctx.send("No users have been registered yet.")
+        return
+
+    with open(file_path, "r") as file:
+        lines = file.readlines()
+
+    if not lines:
+        await ctx.send("No users have been registered yet.")
+        return
+
+    message = "Registered users:\n"
+    for line in lines:
+        user_id, username, rank = line.strip().split(":")
+        message += f"{username} ({user_id}) - Rank: {rank}\n"
+
+    await ctx.send(message)
+
+@client.command(name='unregister')
+async def remove_user(ctx, user_id: int):
+    file_path = "user_data.txt"
+    if not os.path.exists(file_path):
+        await ctx.send("No users have been registered yet.")
+        return
+
+    with open(file_path, "r") as file:
+        lines = file.readlines()
+
+    if not lines:
+        await ctx.send("No users have been registered yet.")
+        return
+
+    found = False
+    with open(file_path, "w") as file:
+        for line in lines:
+            current_user_id, username, rank = line.strip().split(":")
+            if int(current_user_id) == user_id:
+                found = True
+                continue
+            file.write(line)
+
+    if found:
+        await ctx.send(f"User with ID {user_id} has been removed.")
+    else:
+        await ctx.send(f"User with ID {user_id} was not found.")
 
 
 
