@@ -246,20 +246,29 @@ async def say(ctx, *, message: str):
 
 @client.command(name='mute')
 @commands.has_role(1067618350861127700)
-async def mute_user(ctx, member: discord.Member, time: float):
-    await ctx.channel.set_permissions(member, send_messages=False)
-    await ctx.send(f"{member.mention} has been muted for {time} minutes.")
-    
-    await asyncio.sleep(time * 60)
-    
-    await ctx.channel.set_permissions(member, send_messages=True)
+async def mute(ctx, member: discord.Member, time: int):
+    for channel in ctx.guild.channels:
+        await channel.set_permissions(member, send_messages=False)
+    await ctx.send(f"{member.mention} has been muted for {time} seconds.")
+    await asyncio.sleep(time)
+    for channel in ctx.guild.channels:
+        await channel.set_permissions(member, send_messages=None)
     await ctx.send(f"{member.mention} has been unmuted.")
+
 
 @client.command(name='unmute')
 @commands.has_role(1067618350861127700)
-async def unmute_user(ctx, member: discord.Member):
-    await ctx.channel.set_permissions(member, send_messages=True)
+async def unmute(ctx, member: discord.Member):
+    original_permissions = {}
+    for channel in ctx.guild.channels:
+        if channel.permissions_for(member).send_messages:
+            original_permissions[channel] = channel.overwrites_for(member)
+        else:
+            await channel.set_permissions(member, send_messages=None)
     await ctx.send(f"{member.mention} has been unmuted.")
+    for channel, original_permission in original_permissions.items():
+        await channel.set_permissions(member, **original_permission)
+
 
 @client.command(name='check')
 @commands.has_role(760138708438876213)
