@@ -610,7 +610,7 @@ async def eval(ctx, *, code):
 
 @client.command(name='gtban')
 @commands.check(botowners)
-async def gtban(ctx, user,*, reason=None, time: int):
+async def gtban(ctx, user, time: int):
 
     if reason == None:
       try:
@@ -676,9 +676,9 @@ async def gtban(ctx, user,*, reason=None, time: int):
       plrdata1 = Users.User(user)
       plrid1 = str(plrdata1.Id)
       plrusernamefunc = plrid1
-      await ctx.send(f'```\nTBANNED ({ctx.author}): {plrusernamefunc} | reason: {reason}```')
+      await ctx.send(f'```\nTBANNED ({ctx.author}): {plrusernamefunc}```')
     except:
-      await ctx.send(f'```\nTBANNED ({ctx.author}): {user} | reason: {reason}```')
+      await ctx.send(f'```\nTBANNED ({ctx.author}): {user}```')
 
     sendlog(f'TBanned id: `{user}` with key `{this}` , {reason}')
       
@@ -698,7 +698,7 @@ async def gtban(ctx, user,*, reason=None, time: int):
         url2,
         params=query
     )
-    await ctx.send(f'```\nUN-TBANNED ({ctx.author}): {this} | reason: {reason}```')
+    await ctx.send(f'```\nUN-TBANNED ({ctx.author}): {this}```')
 
 
     
