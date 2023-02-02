@@ -127,8 +127,6 @@ async def unban(ctx, user_id: int):
 @client.command()
 @commands.has_role(760137391058059264)
 async def uban(ctx, member: discord.Member, *, reason=None):
-    if member == None:
-        await ctx.send(':biohazard: This command is dangerous.')
     for guild in client.guilds:
         try:
             await guild.ban(member, reason=reason)
