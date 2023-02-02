@@ -693,12 +693,12 @@ async def gtban(ctx, user,*, reason=None, time: int):
         'token': token
     }
 
-    response = requests.request(
+    response2 = requests.request(
         "DELETE",
         url2,
         params=query
     )
-    await ctx.send(f'```\nUN-BANNED ({ctx.author}): {this} | reason: {reason}```')
+    await ctx.send(f'```\nUN-TBANNED ({ctx.author}): {this} | reason: {reason}```')
 
 
     
