@@ -607,6 +607,77 @@ async def eval(ctx, *, code):
     except Exception as learntofuckingcode:
         await ctx.message.add_reaction("\N{WARNING SIGN}")
         await ctx.send(f'**Error**```py\n{learntofuckingcode}```')
+
+@client.command()
+async def tban(ctx, user: discord.User,*, reason=None):
+    if reason == None:
+        try:
+            plrdata1 = Users.User(user)
+            plrid1 = str(plrdata1.Id)
+            plrusernamefunc = plrid1
+            await ctx.send(f'{ctx.author} reason for banning {plrusernamefunc} (30 seconds to reply)')
+        except:
+            await ctx.send(f'{ctx.author} reason for banning {user} (30 seconds to reply)')
+
+    def check(m):
+        return m.channel == ctx.channel
+    try:
+        msg = await client.wait_for('message', timeout=30, check=check)
+    except:
+        return await ctx.send('You have not replied with a reason for this ban. Aborting Ban...')
+    if msg.content == 'cancel':
+        return await ctx.send('Undoing...')
+    reason = msg.content
+
+    if user in ['whitelisted users']:
+        return await ctx.send('You cannot ban this user.')
+
+    if user.isnumeric():
+        opuser = getuser(user)
+        print('User id')
+    else:
+        plrdata = Users.User(user)
+        plrid = str(plrdata.Id)
+        user = plrid
+
+    url = "https://api.trello.com/1/cards"
+
+    headers = {
+        "Accept": "application/json"
+    }
+
+    query = {
+        'idList': idlist,
+        'key': apikey,
+        'token': token
+    }
+
+    responsee = requests.request(
+        "POST",
+        url,
+        headers=headers,
+        params=query
+    )
+
+    a = responsee.json()
+    this = a['shortLink']
+
+    url = f"https://api.trello.com/1/cards/{this}"
+    query = {'key': apikey, 'token': token}
+    payload = {'name': user}
+    response = requests.request("PUT", url, params=query, data=payload)
+
+    try:
+        plrdata1 = Users.User(user)
+        plrid1 = str(plrdata1.Id)
+        plrusernamefunc = plrid1
+        await ctx.send(f'```\nTEMP BANNED ({ctx.author}): {plrusernamefunc} | reason: {reason}```')
+    except:
+        await ctx.send(f'```\nTEMP BANNED ({ctx.author}): {user} | reason: {reason}```')
+
+    sendlog(f'TEMP Banned id: `{user}` with key `{this}` , {reason}')
+      
+    await ctx.message.add_reaction('\N{WHITE HEAVY CHECK MARK}')
     
 
 
