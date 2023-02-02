@@ -408,11 +408,13 @@ async def help(ctx):
     embed.add_field(name='check', value='checks if someone is verified', inline=False)
     embed.add_field(name='checkid', value='Checks someones UserID and returns their Username', inline=False)
     embed.add_field(name='checkserv', value='Checks the game for any running servers and how many people are in it', inline=False)
-    embed.add_field(name='register', value='register a roblox username to a department', inline=False)
-    embed.add_field(name='registerlist', value='check the list of registered users', inline=False)
-    embed.add_field(name='unregister', value='removes someone from the list of registered people', inline=False)
     embed.set_footer(text='Note: The names of the commands are case-sensitive.')
+    embed2 = discord.Embed(title='Help', description='List of available commands:', color=0x71368a)
+    embed2.add_field(name='register', value='register a roblox username to a department', inline=False)
+    embed2.add_field(name='registerlist', value='check the list of registered users', inline=False)
+    embed2.add_field(name='unregister', value='removes someone from the list of registered people', inline=False)
     await ctx.send(embed=embed)
+    await ctx.send(embed=embed2)
 
 @client.command()
 async def shutdown(ctx):
@@ -424,6 +426,7 @@ async def shutdown(ctx):
         await ctx.send("You dont have sufficient permissions to perform this action!")
 
 @client.command()
+@commands.has_role(968168224279633940)
 async def register(ctx, username: str, rank: str):
     # Check if the file exists, and create it if it doesn't
     file_path = "user_data.txt"
@@ -438,6 +441,7 @@ async def register(ctx, username: str, rank: str):
     await ctx.send(f"{ctx.author.name} has been registered as {username} with rank {rank}")
 
 @client.command(name='registerlist')
+@commands.has_role(968168224279633940)
 async def list_users(ctx):
     file_path = "user_data.txt"
     if not os.path.exists(file_path):
@@ -459,6 +463,7 @@ async def list_users(ctx):
     await ctx.send(message)
 
 @client.command(name='unregister')
+@commands.has_role(968168224279633940)
 async def remove_user(ctx, user_id: int):
     file_path = "user_data.txt"
     if not os.path.exists(file_path):
