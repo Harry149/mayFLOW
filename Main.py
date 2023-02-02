@@ -244,7 +244,7 @@ async def say(ctx, *, message: str):
     await ctx.message.delete()
     await ctx.send(message)
 
-@client.command(name='mute')
+'''@client.command(name='mute')
 @commands.has_role(1067618350861127700)
 async def mute(ctx, member: discord.Member, time: float):
     for channel in ctx.guild.channels:
@@ -267,7 +267,7 @@ async def unmute(ctx, member: discord.Member):
             await channel.set_permissions(member, send_messages=None)
     await ctx.send(f"{member.mention} has been unmuted.")
     for channel, original_permission in original_permissions.items():
-        await channel.set_permissions(member, **original_permission)
+        await channel.set_permissions(member, **original_permission)'''
 
 
 @client.command(name='check')
