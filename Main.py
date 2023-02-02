@@ -302,7 +302,7 @@ async def get_username(ctx, roblox_id: int):
     else:
         await ctx.send(f"Error fetching data. Response code: {response.status_code}")
 
-@client.command()
+@client.command(name='checkserv')
 async def servers(ctx, server_id: str=None):
     response = requests.get("https://games.roblox.com/v1/games/9898641609/servers/Public?sortOrder=Asc&limit=100")
     data = response.json()
