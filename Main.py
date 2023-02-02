@@ -611,15 +611,9 @@ async def eval(ctx, *, code):
 @client.command(name='gtban')
 @commands.check(botowners)
 async def gtban(ctx, user, time: int):
-
-    if reason == None:
-      try:
-        plrdata1 = Users.User(user)
-        plrid1 = str(plrdata1.Id)
-        plrusernamefunc = plrid1
-        await ctx.send(f'{ctx.author} reason for tbanning {plrusernamefunc} (30 seconds to reply)')
-      except:
-        await ctx.send(f'{ctx.author} reason for tbanning {user} (30 seconds to reply)')
+    plrdata1 = Users.User(user)
+    plrid1 = str(plrdata1.Id)
+    plrusernamefunc = plrid1
 
     def check(m):
         return m.channel == ctx.channel
