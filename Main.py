@@ -228,6 +228,10 @@ async def suggest(ctx, *, suggestion: str):
     await suggestion_message.add_reaction("❌")
     await ctx.message.delete()
 
+@client.command(name='av')
+async def avatar(ctx, member: discord.member):
+    await ctx.send(f'{member.display_avatar}')
+
 @client.command()
 async def whois(ctx, member: discord.Member):
     embed = discord.Embed(title=f"{member.name}#{member.discriminator}", color=0x71368a)
@@ -306,6 +310,40 @@ async def get_username(ctx, roblox_id: int):
     else:
         await ctx.send(f"Error fetching data. Response code: {response.status_code}")
 
+@client.command()
+async def servers(ctx, server_id: str=None):
+    response = requests.get("https://games.roblox.com/v1/games/9898641609/servers/Public?sortOrder=Asc&limit=100")
+    data = response.json()
+    servers = data.get("data")
+    
+    if not servers:
+        await ctx.send("Sorry 😣! There are currently no running servers!")
+        return
+
+    if server_id:
+        found_server = None
+        for server in servers:
+            if server["id"] == server_id:
+                found_server = server
+                break
+        
+        if not found_server:
+            await ctx.send("Sorry :persevere:! This server does not exist!")
+        else:
+            await ctx.send(f"Server Link: https://www.roblox.com/games/9898641609/New-Haven-County?jobId={server_id}")
+    else:
+        embed = discord.Embed(title="Servers")
+        servers_count = 0
+        for server in servers:
+            servers_count += 1
+            embed.add_field(
+                name=f"Server {server['playing']}/{server['maxPlayers']} {server['id']}",
+                value=f"[Server Link](https://www.roblox.com/games/9898641609/New-Haven-County?jobId={server['id']})",
+                inline=False
+            )
+        embed.description = f"There are currently {servers_count} servers."
+        await ctx.send(embed=embed)
+
 group_id = 6987168
 headers = {
     "Content-Type": "application/json",
@@ -380,6 +418,8 @@ async def help(ctx):
     embed.add_field(name='unmute', value='Use this command to unmute someone.', inline=False)
     embed.add_field(name='check', value='checks if someone is verified', inline=False)
     embed.add_field(name='checkid', value='Checks someones UserID and returns their Username', inline=False)
+    embed.add_field(name='kick', value='kicks a user from the discord with a reason', inline=False)
+    embed.add_field(name='av', value='tells you someones avatar', inline=False)
     embed.set_footer(text='Note: The names of the commands are case-sensitive.')
     await ctx.send(embed=embed)
 
