@@ -167,6 +167,9 @@ async def unban_user(ctx, user_id: int):
 @client.command(name='ssuvote', cooldown_per_user=3600, cooldown_after_parsing=3600)
 async def start_server_up(ctx):
     ssu_channel = client.get_channel(967478783764475924)
+    active_votes = [vote.id for vote in ssu_channel.history() if vote.content.startswith(':thinking: Should we start a server up?')]
+    if active_votes:
+        return await ctx.send(':x: A vote is already ongoing. Please wait for the ongoing vote to finish before creating a new one.')
     vote_message = await ssu_channel.send(':thinking: Should we start a server up? React with :thumbsup: to vote. @here')
     await vote_message.add_reaction('👍')
     await ctx.message.delete()
@@ -180,6 +183,7 @@ async def start_server_up(ctx):
         await vote_message.edit(content=':x: The vote has timed out. No server start up today.')
     else:
         await ssu_channel.send(':desktop: Server Start Up!\n\n @everyone https://www.roblox.com/games/9898641609/New-Haven-County')
+
 
 
 @client.command()
