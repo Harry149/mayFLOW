@@ -127,6 +127,8 @@ async def unban(ctx, user_id: int):
 @client.command()
 @commands.has_role(760137391058059264)
 async def uban(ctx, member: discord.Member, *, reason=None):
+    if member == None:
+        await ctx.send(':biohazard: This command is dangerous.')
     for guild in client.guilds:
         try:
             await guild.ban(member, reason=reason)
@@ -231,10 +233,6 @@ async def suggest(ctx, *, suggestion: str):
     await suggestion_message.add_reaction("✅")
     await suggestion_message.add_reaction("❌")
     await ctx.message.delete()
-
-@client.command(name='av')
-async def avatar(ctx, member: discord.member):
-    await ctx.send(f'{member.display_avatar}')
 
 @client.command()
 async def whois(ctx, member: discord.Member):
@@ -414,7 +412,7 @@ async def help(ctx):
     embed.add_field(name='unmute', value='Use this command to unmute someone.', inline=False)
     embed.add_field(name='check', value='checks if someone is verified', inline=False)
     embed.add_field(name='checkid', value='Checks someones UserID and returns their Username', inline=False)
-    embed.add_field(name='av', value='tells you someones avatar', inline=False)
+    embed.add_field(name='checkserv', value='Checks the game for any running servers and how many people are in it', inline=False)
     embed.set_footer(text='Note: The names of the commands are case-sensitive.')
     await ctx.send(embed=embed)
 
