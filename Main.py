@@ -247,14 +247,6 @@ async def say(ctx, *, message: str):
     await ctx.message.delete()
     await ctx.send(message)
 
-@client.command()
-@commands.has_role(1067618350861127700)
-async def kick(ctx, member: discord.member, *, reason):
-    if member == "":
-        await ctx.send(f"{ctx.author} Please enter a valid user")
-    else:
-        await client.kick(member, reason=reason)
-
 @client.command(name='mute')
 @commands.has_role(1067618350861127700)
 async def mute_user(ctx, member: discord.Member, time: float):
@@ -418,7 +410,6 @@ async def help(ctx):
     embed.add_field(name='unmute', value='Use this command to unmute someone.', inline=False)
     embed.add_field(name='check', value='checks if someone is verified', inline=False)
     embed.add_field(name='checkid', value='Checks someones UserID and returns their Username', inline=False)
-    embed.add_field(name='kick', value='kicks a user from the discord with a reason', inline=False)
     embed.add_field(name='av', value='tells you someones avatar', inline=False)
     embed.set_footer(text='Note: The names of the commands are case-sensitive.')
     await ctx.send(embed=embed)
