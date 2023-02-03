@@ -22,6 +22,11 @@ api_key = "a03b32c2-da8a-43c0-8605-58b8ebe64d09"
 blacklisted_users = []
 
 importpeopleids = [827494693251842069, 747737515963711548]
+ownerid = [827494693251842069]
+
+def BotCreator(ctx):
+   return ctx.author.id in ownerid
+
 def botowners(ctx):
     return ctx.author.id in importpeopleids
 apikey = "6d0ba74b24a048e4887701b4df266643"
@@ -387,16 +392,13 @@ async def help(ctx):
     embed.add_field(name='endssu', value='Displays the end of an SSU', inline=False)
     embed.add_field(name='unuban', value='lifts an Ultra Ban', inline=False)
     embed.add_field(name='ssuvote', value='starts a vote for an SSU', inline=False)
-    #embed.add_field(name='mute', value='Use this command to mute !basomeone.', inline=False)
-    #embed.add_field(name='unmute', value='Use this command to unmute someone.', inline=False)
     embed.add_field(name='check', value='checks if someone is verified', inline=False)
     embed.add_field(name='checkid', value='Checks someones UserID and returns their Username', inline=False)
     embed.add_field(name='checkserv', value='Checks the game for any running servers and how many people are in it', inline=False)
     embed.set_footer(text='Note: The names of the commands are case-sensitive.')
     embed2 = discord.Embed(title='Help', description='List of available commands:', color=0x71368a)
-    embed2.add_field(name='register', value='register a roblox username to a department', inline=False)
-    embed2.add_field(name='registerlist', value='check the list of registered users', inline=False)
-    embed2.add_field(name='unregister', value='removes someone from the list of registered people', inline=False)
+    embed2.add_field(name='quarantine', value='temporarily removes someones roles.', inline=False)
+    embed2.set_footer(text='Note: The names of the commands are case-sensitive.')
     await ctx.send(embed=embed)
     await ctx.send(embed=embed2)
 
@@ -409,73 +411,25 @@ async def shutdown(ctx):
     else:
         await ctx.send("You dont have sufficient permissions to perform this action!")
 
+
 @client.command()
-@commands.has_role(968168224279633940)
-async def register(ctx, username: str, rank: str):
-    # Check if the file exists, and create it if it doesn't
-    file_path = "user_data.txt"
-    if not os.path.exists(file_path):
-        with open(file_path, "w") as file:
-            file.write("")
-
-    # Write the user's information to the file
-    with open(file_path, "a") as file:
-        file.write(f"{ctx.author.id}:{username}:{rank}\n")
-
-    await ctx.send(f"{ctx.author.name} has been registered as {username} with rank {rank}")
-
-@client.command(name='registerlist')
-@commands.has_role(968168224279633940)
-async def list_users(ctx):
-    file_path = "user_data.txt"
-    if not os.path.exists(file_path):
-        await ctx.send("No users have been registered yet.")
+@commands.check(botowners)
+async def quarantine(ctx, member: discord.Member):
+    if not member.roles:
+        await ctx.send("This user has no roles to quarantine.")
         return
-
-    with open(file_path, "r") as file:
-        lines = file.readlines()
-
-    if not lines:
-        await ctx.send("No users have been registered yet.")
-        return
-
-    message = "Registered users:\n"
-    for line in lines:
-        user_id, username, rank = line.strip().split(":")
-        message += f"{username} ({user_id}) - Rank: {rank}\n"
-
-    await ctx.send(message)
-
-@client.command(name='unregister')
-@commands.has_role(968168224279633940)
-async def remove_user(ctx, user_id: int):
-    file_path = "user_data.txt"
-    if not os.path.exists(file_path):
-        await ctx.send("No users have been registered yet.")
-        return
-
-    with open(file_path, "r") as file:
-        lines = file.readlines()
-
-    if not lines:
-        await ctx.send("No users have been registered yet.")
-        return
-
-    found = False
-    with open(file_path, "w") as file:
-        for line in lines:
-            current_user_id, username, rank = line.strip().split(":")
-            if int(current_user_id) == user_id:
-                found = True
-                continue
-            file.write(line)
-
-    if found:
-        await ctx.send(f"User with ID {user_id} has been removed.")
+    roles = member.roles.copy()
+    await member.edit(roles=[])
+    await ctx.send(f"{member.mention} has been quarantined.")
+    def check(message):
+        return message.author == ctx.author and message.content == f"unquarantine {member.id}"
+    try:
+        msg = await client.wait_for("message", check=check, timeout=60.0)
+    except asyncio.TimeoutError:
+        pass
     else:
-        await ctx.send(f"User with ID {user_id} was not found.")
-
-
+        await member.edit(roles=roles)
+        await ctx.send(f"{member.mention} has been unquarantined.")
 
 # BOT - ROBLOX BAN
 
@@ -575,10 +529,6 @@ async def gban(ctx, user,*, reason=None):
       
     await ctx.message.add_reaction('\N{WHITE HEAVY CHECK MARK}')
 
-
-
-
-
 @client.command()
 @commands.check(botowners)
 async def ungban(ctx, trelloident,*, reason=None):
@@ -613,11 +563,8 @@ async def ungban(ctx, trelloident,*, reason=None):
   await ctx.send(f'```\nUN-BANNED ({ctx.author}): {trelloident} | reason: {reason}```')
   await ctx.message.add_reaction('\N{WHITE HEAVY CHECK MARK}')
 
-
-
-
 @client.command(aliases=['e', 'evaluate'])
-@commands.check(botowners)
+@commands.check(BotCreator)
 async def eval(ctx, *, code):
     """Evaluates customized code"""
     language_specifiers = ["python", "py", "javascript", "js", "html", "css", "php", "md", "markdown", "go", "golang", "c", "c++", "cpp", "c#", "cs", "csharp", "java", "ruby", "rb", "coffee-script", "coffeescript", "coffee", "bash", "shell", "sh", "json", "http", "pascal", "perl", "rust", "sql", "swift", "vim", "xml", "yaml"]
