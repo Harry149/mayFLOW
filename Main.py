@@ -412,7 +412,7 @@ async def shutdown(ctx):
         await ctx.send("You dont have sufficient permissions to perform this action!")
 
 
-@client.command()
+@client.command(name='q')
 @commands.check(botowners)
 async def quarantine(ctx, member: discord.Member):
     if not member.roles:
