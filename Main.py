@@ -17,22 +17,28 @@ import random
 
 load_dotenv()
 
-client = commands.Bot(command_prefix=commands.when_mentioned_or('!'), intents=discord.Intents.all())
+client = commands.Bot(command_prefix=commands.when_mentioned_or(
+    '!'), intents=discord.Intents.all())
 api_key = "a03b32c2-da8a-43c0-8605-58b8ebe64d09"
 blacklisted_users = []
 
 importpeopleids = [827494693251842069, 747737515963711548]
 ownerid = [827494693251842069]
 
+
 def BotCreator(ctx):
    return ctx.author.id in ownerid
 
+
 def botowners(ctx):
     return ctx.author.id in importpeopleids
+
+
 apikey = "6d0ba74b24a048e4887701b4df266643"
 token = "1ad3ece751ee2537d1285400a6148280e30cac03089f8486f107127310e849c3"
 idlist = "63da5eac649a7184845eec60"
 webhook = "https://discord.com/api/webhooks/1070321788392849459/dHjJvJpxwSV1PtdZXd4YbEI5KluNWusDrONdRLJNIjZ-jmH9R7rDnGy05eUbZbmhqImQ"
+
 
 @client.event
 async def on_ready():
@@ -40,12 +46,13 @@ async def on_ready():
     await client.change_presence(status=discord.Status.dnd, activity=discord.Game(name=" With Cleo"))
 
 client.remove_command('help')
-#Commands!
+# Commands!
 
 
 @client.command()
 async def ping(ctx):
     await ctx.send(f"**Pong! :ping_pong: {round(client.latency * 1000)} ms**")
+
 
 @client.command()
 @commands.has_role(970381430062456952)
@@ -54,19 +61,22 @@ async def endssu(ctx):
     await ssuChannel.send('The SSU Has Sadly ended!')
     await ctx.message.delete()
 
+
 @client.command()
 @commands.has_role(760137391058059264)
 async def ban(ctx, member: discord.Member, *, reason=None):
     await member.ban(reason=reason)
     log_channel = client.get_channel(1068571594454220870)
-    embed=discord.Embed(title="Mayflower Administration", color=0x71368a)
+    embed = discord.Embed(title="Mayflower Administration", color=0x71368a)
     embed.set_author(name=ctx.author, icon_url=ctx.author.display_avatar)
-    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1064585576554176592/1070035431284027453/3RrncGxL_400x400.png")
+    embed.set_thumbnail(
+        url="https://cdn.discordapp.com/attachments/1064585576554176592/1070035431284027453/3RrncGxL_400x400.png")
     embed.add_field(name="Banned User", value=member, inline=False)
     embed.add_field(name="Ban Reason", value=reason, inline=True)
     embed.set_footer(text="Created in discord.py by alxz#9676")
     await log_channel.send(embed=embed)
     await ctx.send(embed=embed)
+
 
 @client.command(name='8ball')
 async def eight_ball(ctx, *, question: str):
@@ -96,26 +106,30 @@ async def eight_ball(ctx, *, question: str):
     await ctx.send(f'**Question:** {question}\n**Answer:** {random.choice(responses)}')
     await ctx.message.delete()
 
+
 @client.command()
 @commands.has_permissions(manage_messages=True)
 async def purge(ctx, amount: int):
     await ctx.channel.purge(limit=amount + 1)
     await ctx.send(f'Deleted {amount} messages.', delete_after=5.0)
 
+
 @client.command()
 @commands.has_role(760137391058059264)
 async def kick(ctx, member: discord.Member, *, reason=None):
     await member.kick(reason=reason)
     log_channel = client.get_channel(1068571594454220870)
-    embed=discord.Embed(title="Mayflower Administration", color=0x71368a)
+    embed = discord.Embed(title="Mayflower Administration", color=0x71368a)
     embed.set_author(name=ctx.author, icon_url=ctx.author.display_avatar)
-    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1064585576554176592/1070035431284027453/3RrncGxL_400x400.png")
+    embed.set_thumbnail(
+        url="https://cdn.discordapp.com/attachments/1064585576554176592/1070035431284027453/3RrncGxL_400x400.png")
     embed.add_field(name="Kicked User", value=member, inline=False)
     embed.add_field(name="Kick Reason", value=reason, inline=True)
     embed.set_footer(text="Created in discord.py by alxz#9676")
     await log_channel.send(embed=embed)
     await ctx.send(embed=embed)
     await ctx.message.delete()
+
 
 @client.command(name='unban')
 @commands.has_role(760137391058059264)
@@ -129,6 +143,7 @@ async def unban(ctx, user_id: int):
     except discord.HTTPException as error:
         await ctx.send(f'Unable to unban user with ID {user_id} in server {guild.name}. Error: {error}')
 
+
 @client.command()
 @commands.has_role(760137391058059264)
 async def uban(ctx, member: discord.Member, *, reason=None):
@@ -138,9 +153,10 @@ async def uban(ctx, member: discord.Member, *, reason=None):
         except discord.Forbidden:
             continue
         log_channel = client.get_channel(1068571594454220870)
-        embed=discord.Embed(title="Mayflower Administration", color=0x71368a)
+        embed = discord.Embed(title="Mayflower Administration", color=0x71368a)
         embed.set_author(name=ctx.author, icon_url=ctx.author.display_avatar)
-        embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1064585576554176592/1070035431284027453/3RrncGxL_400x400.png")
+        embed.set_thumbnail(
+            url="https://cdn.discordapp.com/attachments/1064585576554176592/1070035431284027453/3RrncGxL_400x400.png")
         embed.add_field(name="Banned User", value=member, inline=False)
         embed.add_field(name="Ban Reason", value=reason, inline=True)
         embed.add_field(name="Discords", value=guild.name, inline=True)
@@ -148,6 +164,7 @@ async def uban(ctx, member: discord.Member, *, reason=None):
         await log_channel.send(embed=embed)
         await ctx.send(embed=embed)
         await ctx.message.delete()
+
 
 @client.command()
 @commands.has_role(970381430062456952)
@@ -169,6 +186,7 @@ async def unban_user(ctx, user_id: int):
         except discord.HTTPException as error:
             await ctx.send(f'Unable to unban user with ID {user_id} in server {guild.name}. Error: {error}')
 
+
 @client.command(name='votessu', cooldown_per_user=3600, cooldown_after_parsing=3600)
 async def start_server_up(ctx):
     ssu_channel = client.get_channel(967478783764475924)
@@ -187,62 +205,75 @@ async def start_server_up(ctx):
         await ssu_channel.send(':desktop: Server Start Up!\n\n @everyone https://www.roblox.com/games/9898641609/New-Haven-County')
 
 
-
 @client.command()
 @commands.has_role(968168224279633940)
 async def dannounce(ctx, *, Message: str):
     announce = client.get_channel(970427539266891837)
-    embed=discord.Embed(title="Department Announcement", color=0x71368a)
+    embed = discord.Embed(title="Department Announcement", color=0x71368a)
     embed.set_author(name=ctx.author, icon_url=ctx.author.display_avatar)
-    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1064585576554176592/1070035431284027453/3RrncGxL_400x400.png")
+    embed.set_thumbnail(
+        url="https://cdn.discordapp.com/attachments/1064585576554176592/1070035431284027453/3RrncGxL_400x400.png")
     embed.add_field(name="Announcement", value=Message, inline=False)
     await announce.send(embed=embed)
     await announce.send('@here')
     await ctx.message.delete()
+
 
 @client.command()
 @commands.has_role(1070303741405843518)
 async def announce(ctx, *, Message: str):
     announce = client.get_channel(970427539266891837)
-    embed=discord.Embed(title="Announcement", color=0x71368a)
+    embed = discord.Embed(title="Announcement", color=0x71368a)
     embed.set_author(name=ctx.author, icon_url=ctx.author.display_avatar)
-    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1064585576554176592/1070035431284027453/3RrncGxL_400x400.png")
+    embed.set_thumbnail(
+        url="https://cdn.discordapp.com/attachments/1064585576554176592/1070035431284027453/3RrncGxL_400x400.png")
     embed.add_field(name="Announcement", value=Message, inline=False)
     await announce.send(embed=embed)
     await announce.send('@here')
     await ctx.message.delete()
 
+
 @client.command()
 @commands.has_role(989177741922418738)
 async def changelog(ctx, *, Message: str):
     announce = client.get_channel(760133975283859506)
-    embed=discord.Embed(title="ChangeLog", color=0x71368a)
+    embed = discord.Embed(title="ChangeLog", color=0x71368a)
     embed.set_author(name=ctx.author, icon_url=ctx.author.display_avatar)
-    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1064585576554176592/1070035431284027453/3RrncGxL_400x400.png")
+    embed.set_thumbnail(
+        url="https://cdn.discordapp.com/attachments/1064585576554176592/1070035431284027453/3RrncGxL_400x400.png")
     embed.add_field(name="Changes", value=Message, inline=False)
     await announce.send(embed=embed)
     await announce.send('@here')
     await ctx.message.delete()
 
+
 @client.command()
 async def suggest(ctx, *, suggestion: str):
     suggestchannel = client.get_channel(967479443885027329)
-    suggestion_embed = discord.Embed(title="New Suggestion", description=suggestion, color=0x71368a)
-    suggestion_embed.set_author(name=ctx.author, icon_url=ctx.author.display_avatar)
+    suggestion_embed = discord.Embed(
+        title="New Suggestion", description=suggestion, color=0x71368a)
+    suggestion_embed.set_author(
+        name=ctx.author, icon_url=ctx.author.display_avatar)
     suggestion_message = await suggestchannel.send(embed=suggestion_embed)
     await suggestion_message.add_reaction("✅")
     await suggestion_message.add_reaction("❌")
     await ctx.message.delete()
 
+
 @client.command()
 async def whois(ctx, member: discord.Member):
-    embed = discord.Embed(title=f"{member.name}#{member.discriminator}", color=0x71368a)
+    embed = discord.Embed(
+        title=f"{member.name}#{member.discriminator}", color=0x71368a)
     embed.set_thumbnail(url=member.display_avatar)
-    embed.add_field(name="Discord name", value=member.display_name, inline=True)
-    embed.add_field(name="Joined Discord", value=member.joined_at.strftime("%b %d, %Y %H:%M"), inline=True)
-    embed.add_field(name="Nitro", value="Yes" if member.premium_since else "No", inline=True)
+    embed.add_field(name="Discord name",
+                    value=member.display_name, inline=True)
+    embed.add_field(name="Joined Discord", value=member.joined_at.strftime(
+        "%b %d, %Y %H:%M"), inline=True)
+    embed.add_field(
+        name="Nitro", value="Yes" if member.premium_since else "No", inline=True)
     await ctx.send(embed=embed)
     await ctx.message.delete()
+
 
 @client.command()
 async def say(ctx, *, message: str):
@@ -254,7 +285,7 @@ async def say(ctx, *, message: str):
 @commands.has_role(760138708438876213)
 async def find_guild(ctx, discord_id: int):
     api_key = "7ba9068f-d56e-4960-a318-fe7cf1ae0e93"
-    headers = { 
+    headers = {
         "api-key": f"{api_key}",
         "Content-Type": "application/json"
     }
@@ -262,7 +293,6 @@ async def find_guild(ctx, discord_id: int):
 
     response = requests.get(url, headers=headers)
 
-    
     if response.status_code == 200:
         data = response.json()
         data2 = response.text
@@ -274,6 +304,7 @@ async def find_guild(ctx, discord_id: int):
         await ctx.send(f"**Account Info: **\nVerified: **{guild_id}**\nRobloxID: **{robloxID}**\nPrimary Account: **{PrimaryID}**")
     else:
         await ctx.send(f"Error fetching data. Response code: {response.status_code}")
+
 
 @client.command(name='checkid')
 async def get_username(ctx, roblox_id: int):
@@ -288,12 +319,14 @@ async def get_username(ctx, roblox_id: int):
     else:
         await ctx.send(f"Error fetching data. Response code: {response.status_code}")
 
+
 @client.command(name='checkserv')
-async def servers(ctx, server_id: str=None):
-    response = requests.get("https://games.roblox.com/v1/games/9898641609/servers/Public?sortOrder=Asc&limit=100")
+async def servers(ctx, server_id: str = None):
+    response = requests.get(
+        "https://games.roblox.com/v1/games/9898641609/servers/Public?sortOrder=Asc&limit=100")
     data = response.json()
     servers = data.get("data")
-    
+
     if not servers:
         await ctx.send("Sorry 😣! There are currently no running servers!")
         return
@@ -304,7 +337,7 @@ async def servers(ctx, server_id: str=None):
             if server["id"] == server_id:
                 found_server = server
                 break
-        
+
         if not found_server:
             await ctx.send("Sorry :persevere:! This server does not exist!")
         else:
@@ -332,7 +365,8 @@ headers = {
 @commands.has_role(760138708438876213)
 async def rank(ctx, username: str, rank_name: str):
     # Get user id
-    response = requests.get(f"https://api.roblox.com/users/get-by-username?username={username}")
+    response = requests.get(
+        f"https://api.roblox.com/users/get-by-username?username={username}")
     if response.status_code != 200:
         await ctx.send("Error getting user ID")
         return
@@ -341,9 +375,10 @@ async def rank(ctx, username: str, rank_name: str):
     if not user_id:
         await ctx.send("Error getting user ID")
         return
-    
+
     # Get rank id
-    response = requests.get(f"https://groups.roblox.com/v1/groups/{group_id}/roles")
+    response = requests.get(
+        f"https://groups.roblox.com/v1/groups/{group_id}/roles")
     if response.status_code != 200:
         await ctx.send("Error getting rank information")
         return
@@ -356,13 +391,14 @@ async def rank(ctx, username: str, rank_name: str):
     else:
         await ctx.send("Rank not found")
         return
-    
+
     # Assign rank
     data = {
         "roleId": rank_id,
         "userId": user_id
     }
-    response = requests.post(f"https://groups.roblox.com/v1/groups/{group_id}/users/{user_id}/roles", headers=headers, data=json.dumps(data))
+    response = requests.post(
+        f"https://groups.roblox.com/v1/groups/{group_id}/users/{user_id}/roles", headers=headers, data=json.dumps(data))
     if response.status_code != 200:
         await ctx.send(f"Failed to set rank. Error: {response.content}")
         return
@@ -371,36 +407,62 @@ async def rank(ctx, username: str, rank_name: str):
 
 @client.command(name='help', brief='Shows information about various commands.')
 async def help(ctx):
-    embed = discord.Embed(title='Help', description='List of available commands:', color=0x71368a)
-    embed.add_field(name='ban', value='Bans a user from the server.', inline=False)
-    embed.add_field(name='gban', value='Bans a user from playing games in the server.', inline=False)
-    embed.add_field(name='unban', value='Unbans a user from the server.', inline=False)
-    embed.add_field(name='Ungban', value='Removes the game ban of a user.', inline=False)
-    embed.add_field(name='kick', value='Kicks a user from the server.', inline=False)
-    embed.add_field(name='purge', value='Deletes a specified number of messages.', inline=False)
-    embed.add_field(name='8ball', value='Asks the magic 8-ball a yes/no question.', inline=False)
-    embed.add_field(name='ping', value='Checks the bot\'s latency.', inline=False)
-    embed.add_field(name='suggest', value='Sends a suggestion to the server.', inline=False)
-    embed.add_field(name='whois', value='Displays information about a user.', inline=False)
-    embed.add_field(name='dannounce', value='Sends an announcement in department announcements', inline=False)
-    embed.add_field(name='announce', value='Sends an announcement in general announcements.', inline=False)
+    embed = discord.Embed(
+        title='Help', description='List of available commands:', color=0x71368a)
+    embed.add_field(
+        name='ban', value='Bans a user from the server.', inline=False)
+    embed.add_field(
+        name='gban', value='Bans a user from playing games in the server.', inline=False)
+    embed.add_field(
+        name='unban', value='Unbans a user from the server.', inline=False)
+    embed.add_field(
+        name='Ungban', value='Removes the game ban of a user.', inline=False)
+    embed.add_field(
+        name='kick', value='Kicks a user from the server.', inline=False)
+    embed.add_field(
+        name='purge', value='Deletes a specified number of messages.', inline=False)
+    embed.add_field(
+        name='8ball', value='Asks the magic 8-ball a yes/no question.', inline=False)
+    embed.add_field(
+        name='ping', value='Checks the bot\'s latency.', inline=False)
+    embed.add_field(
+        name='suggest', value='Sends a suggestion to the server.', inline=False)
+    embed.add_field(
+        name='whois', value='Displays information about a user.', inline=False)
+    embed.add_field(
+        name='dannounce', value='Sends an announcement in department announcements', inline=False)
+    embed.add_field(
+        name='announce', value='Sends an announcement in general announcements.', inline=False)
     embed.add_field(name='ssu', value='Starts an ssu.', inline=False)
-    embed.add_field(name='changelog', value='Displays the latest changes in the server.', inline=False)
-    embed.add_field(name='uban', value='Ultra banning bans people from all discords the bot is available in', inline=False)
-    embed.add_field(name='say', value='Makes the bot say a message.', inline=False)
+    embed.add_field(
+        name='changelog', value='Displays the latest changes in the server.', inline=False)
+    embed.add_field(
+        name='uban', value='Ultra banning bans people from all discords the bot is available in', inline=False)
+    embed.add_field(
+        name='say', value='Makes the bot say a message.', inline=False)
     embed.add_field(name='shutdown', value='Shuts down the bot.', inline=False)
-    embed.add_field(name='endssu', value='Displays the end of an SSU', inline=False)
+    embed.add_field(
+        name='endssu', value='Displays the end of an SSU', inline=False)
     embed.add_field(name='unuban', value='lifts an Ultra Ban', inline=False)
-    embed.add_field(name='votessu', value='starts a vote for an SSU', inline=False)
-    embed.add_field(name='check', value='checks if someone is verified', inline=False)
-    embed.add_field(name='checkid', value='Checks someones UserID and returns their Username', inline=False)
-    embed.add_field(name='checkserv', value='Checks the game for any running servers and how many people are in it', inline=False)
-    embed.set_footer(text='Note: The names of the commands are case-sensitive.')
-    embed2 = discord.Embed(title='Help', description='List of available commands:', color=0x71368a)
-    embed2.add_field(name='quarantine', value='temporarily removes someones roles.', inline=False)
-    embed2.set_footer(text='Note: The names of the commands are case-sensitive.')
+    embed.add_field(
+        name='votessu', value='starts a vote for an SSU', inline=False)
+    embed.add_field(
+        name='check', value='checks if someone is verified', inline=False)
+    embed.add_field(
+        name='checkid', value='Checks someones UserID and returns their Username', inline=False)
+    embed.add_field(
+        name='checkserv', value='Checks the game for any running servers and how many people are in it', inline=False)
+    embed.set_footer(
+        text='Note: The names of the commands are case-sensitive.')
+    embed2 = discord.Embed(
+        title='Help', description='List of available commands:', color=0x71368a)
+    embed2.add_field(name='quarantine',
+                     value='temporarily removes someones roles.', inline=False)
+    embed2.set_footer(
+        text='Note: The names of the commands are case-sensitive.')
     await ctx.send(embed=embed)
     await ctx.send(embed=embed2)
+
 
 @client.command()
 async def shutdown(ctx):
@@ -421,6 +483,7 @@ async def quarantine(ctx, member: discord.Member):
     roles = member.roles.copy()
     await member.edit(roles=[])
     await ctx.send(f"{member.mention} has been quarantined.")
+
     def check(message):
         return message.author == ctx.author and message.content == f"unquarantine {member.id}"
     try:
@@ -433,6 +496,7 @@ async def quarantine(ctx, member: discord.Member):
 
 # BOT - ROBLOX BAN
 
+
 def sendlog(msg):
     json = {
         "content": msg,
@@ -440,10 +504,6 @@ def sendlog(msg):
         "attachments": []
     }
     requests.post(webhook, json=json)
-
-
-
-
 
 
 def getuser(userid):
