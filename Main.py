@@ -169,7 +169,7 @@ async def unban_user(ctx, user_id: int):
         except discord.HTTPException as error:
             await ctx.send(f'Unable to unban user with ID {user_id} in server {guild.name}. Error: {error}')
 
-@client.command(name='ssuvote', cooldown_per_user=3600, cooldown_after_parsing=3600)
+@client.command(name='votessu', cooldown_per_user=3600, cooldown_after_parsing=3600)
 async def start_server_up(ctx):
     ssu_channel = client.get_channel(967478783764475924)
     vote_message = await ssu_channel.send(':thinking: Should we start a server up? React with :thumbsup: to vote. @here')
@@ -391,7 +391,7 @@ async def help(ctx):
     embed.add_field(name='shutdown', value='Shuts down the bot.', inline=False)
     embed.add_field(name='endssu', value='Displays the end of an SSU', inline=False)
     embed.add_field(name='unuban', value='lifts an Ultra Ban', inline=False)
-    embed.add_field(name='ssuvote', value='starts a vote for an SSU', inline=False)
+    embed.add_field(name='votessu', value='starts a vote for an SSU', inline=False)
     embed.add_field(name='check', value='checks if someone is verified', inline=False)
     embed.add_field(name='checkid', value='Checks someones UserID and returns their Username', inline=False)
     embed.add_field(name='checkserv', value='Checks the game for any running servers and how many people are in it', inline=False)
