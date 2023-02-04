@@ -1,5 +1,5 @@
 
-
+import pyblox
 import discord
 import os
 from discord.ext import commands
@@ -364,55 +364,28 @@ async def servers(ctx, server_id: str = None):
             )
         embed.description = f"There are currently {servers_count} servers."
         await ctx.send(embed=embed)
-
-group_id = 6987168
-headers = {
-    "Content-Type": "application/json",
-    "Authorization": "_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_C82B479A990164D7A2AEB0D8BEC33A835245AD9DD585BA6F7F2455BAE8CFD3FEAC25EA148B80C9F9432A9EEB93F937BD4C946D09811AD572541797B10F12E86C1838ACFFD7E0277B0DDDF496D2787C64FC3DA1DA6E84AD460B79C6F08AE05190DE4BD53002493380934975054A6B47F443190A398EB822BD5583ED181F2BE5EB7AB82F2A8E5586E0CF801C74D5E77A7B8D66A3E0EEA14C2DF3F0D08A181A0B1E0685858E6D0486E19B3BF9E2C2807E61092742A4D40E2FE29EADD0A2CB7A565B836CAEB38CD4219FABF4BA77054C64BCC19AF984A873D4196E872437D0029416F7C76B5B1A3D918D5030452724E45A7FFF8A5F3AEFD919C5A5DCE0F411FB6FBD0DD1198D39E32E301B5BD0E544A8D0ECB86E729DC75DDFE9E1235FD4CAEF2657AA29006C49936A094C9E5686A4C4597C4FAE9007B346ABD790969A5FC369D1EB7C63B2F5E9D83D75F8B194A3EE2735C4A32F38F60BFD2D3E88BE4BB13AB7762C02CF7E923B5E79518C2704F53AD1F5FC0BC8432EF901E1FD16E47047F203A7E2A21D99CD"
-}
-
-'''@client.command(name='rank')
+        
+@client.command(name='rank')
 @commands.has_role(760138708438876213)
-async def rank(ctx, username: str, rank_name: str):
-    # Get user id
-    response = requests.get(
-        f"https://api.roblox.com/users/get-by-username?username={username}")
-    if response.status_code != 200:
-        await ctx.send("Error getting user ID")
-        return
-    data = response.json()
-    user_id = data.get("Id")
-    if not user_id:
-        await ctx.send("Error getting user ID")
+async def rank(ctx, user: discord.Member = None):
+    group_id = 6987168
+    cookie = '_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_EA04485563263B292A56E6D92D247162BC6F6B8E278F65A95AFCAC5E117D91791BE8EE9D671D46E1A6AB2CE37DCB558E1DBE33171E222F50D9D7D99B2EF24435B3DD3AFCD8D4162D6207126DAF476DF0A706B93F258F51F0E9B7DB7231C2AEE6043D36EBEC0BAEBA6103D83E2A8E1C0CA005235FA2BEC81698CB9A4B88A86C020162B8D879A75B95E694C4D761129E132B6B2E57A64FD6D9EB203B001E9DCFC90833A2D7AC3F2AC1B0652996277681B8F5067B3C619E49FF1EABBB87B1B71F096B67CA58082D590108BB49BF0B3F1CBC79001EFD51AC5345A6819A6CB1C27314B94E50F547F8343488AF75A5D29BD9E37B59276A13C8891149BB8237F491CF25EE96EC0FF73887E0C61303F7608C40B42FB51E50FE2377CB2AEB110D14D48EBD4117E5BB956AD807B6DB5E5057A7FD46FECC7D834D03781FEDCEFBDBF9BFDA494FCCAE21BC0EEE9CD10596097A4D715D1CDA8D260871C62363E04250916DF7D534563E8EB0D61478556C203523D662C90ACEC27612B40FA2966AA43CF34CA860792275F1'
+    if not user:
+        await ctx.send('Please mention or enter the name of the user to rank.')
         return
 
-    # Get rank id
-    response = requests.get(
-        f"https://groups.roblox.com/v1/groups/{group_id}/roles")
-    if response.status_code != 200:
-        await ctx.send("Error getting rank information")
-        return
-    ranks2 = response.json()
-    ranks = ranks2.get("roles")
-    for rank in ranks:
-        if rank["name"] == rank_name:
-            rank_id = rank["id"]
-            break
-    else:
-        await ctx.send("Rank not found")
-        return
+    # Connect to the Roblox group
+    group = pyblox.Group(group_id, cookie)
 
-    # Assign rank
-    data = {
-        "roleId": rank_id,
-        "userId": user_id
-    }
-    response = requests.post(
-        f"https://groups.roblox.com/v1/groups/{group_id}/users/{user_id}/roles", headers=headers, data=json.dumps(data))
-    if response.status_code != 200:
-        await ctx.send(f"Failed to set rank. Error: {response.content}")
-        return
-    await ctx.send(f"Successfully set rank to {rank_name} for user with ID {user_id}")'''
+    # Get the rank of the user in the group
+    try:
+        member = group.get_member(user.name)
+        current_rank = group.get_rank(member.id)
+        new_rank = current_rank + 1
+        group.set_rank(member.id, new_rank)
+        await ctx.send(f'{user.mention} has been promoted to rank {new_rank} in the group.')
+    except:
+        await ctx.send(f'{user.mention} is not a member of the group.')
 
 
 @client.command(name='help', brief='Shows information about various commands.')
