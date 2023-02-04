@@ -556,11 +556,11 @@ async def gban(ctx, user,*, reason=None):
 @client.command()
 @commands.has_role(1071425534954840135)
 async def filecase(ctx, prosecutor, defendant, charges, witness='N/A', evidence=None):
-    description = f'Prosecutor(s): {prosecutor}\n'
-                  f'Defendent(s): {defendant}\n'
-                  f'Charge(s): {charges}\n'
-                  f'Witness(s): {witness}\n'
-                  f'Evidence: {evidence}\n\n'
+    description = f'Prosecutor(s): {prosecutor}\n' \
+                  f'Defendent(s): {defendant}\n' \
+                  f'Charge(s): {charges}\n' \
+                  f'Witness(s): {witness}\n' \
+                  f'Evidence: {evidence}\n\n' \
                   f'Filed By: {ctx.author}'
     await ctx.send(f'Filing case with the following information: \n\n{description}')
 
