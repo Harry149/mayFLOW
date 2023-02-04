@@ -1,6 +1,7 @@
 
 import pyblox
 import discord
+import robloxapi
 import os
 from discord.ext import commands
 import requests
@@ -374,18 +375,24 @@ async def rank(ctx, *, user: str = None):
         await ctx.send('Please enter the name or ID of the user to rank.')
         return
 
-    # Connect to the Roblox group
-    group = pyblox.Group(group_id, cookie)
+    # Connect to the Roblox API
+    rbx = robloxapi.Client(username='MayflowRankBot', password='Harryg08!')
 
-    # Get the rank of the user in the group
+    # Get the user's ID based on their name or ID
     try:
-        member = group.get_member(user)
-        current_rank = group.get_rank(member.id)
-        new_rank = current_rank + 1
-        group.set_rank(member.id, new_rank)
-        await ctx.send(f'{user} has been promoted to rank {new_rank} in the group.')
-    except:
-        await ctx.send(f'{user} is not a member of the group.')
+        user_id = int(user)
+    except ValueError:
+        user_id = rbx.User.get_id_from_username(user)
+
+    # Get the user's rank in the group
+    group = rbx.Group.get_by_id(group_id)
+    member = group.get_member(user_id)
+    current_rank = member.Rank
+
+    # Promote the user by one rank
+    new_rank = current_rank + 1
+    member.Rank = new_rank
+    await ctx.send(f'{user} has been promoted to rank {new_rank} in the group.')
 
 
 @client.command(name='help', brief='Shows information about various commands.')
