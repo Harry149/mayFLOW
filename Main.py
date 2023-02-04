@@ -4,9 +4,8 @@ from discord.ext import commands
 import requests
 import sys
 import json
-import asyncio
 import pyblox3
-from pyblox3 import Users
+import asyncio
 from dotenv import load_dotenv
 import re
 import math
