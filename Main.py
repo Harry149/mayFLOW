@@ -364,14 +364,14 @@ async def servers(ctx, server_id: str = None):
             )
         embed.description = f"There are currently {servers_count} servers."
         await ctx.send(embed=embed)
-        
+
 @client.command(name='rank')
 @commands.has_role(760138708438876213)
-async def rank(ctx, user: discord.Member = None):
+async def rank(ctx, *, user: str = None):
     group_id = 6987168
     cookie = '_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_EA04485563263B292A56E6D92D247162BC6F6B8E278F65A95AFCAC5E117D91791BE8EE9D671D46E1A6AB2CE37DCB558E1DBE33171E222F50D9D7D99B2EF24435B3DD3AFCD8D4162D6207126DAF476DF0A706B93F258F51F0E9B7DB7231C2AEE6043D36EBEC0BAEBA6103D83E2A8E1C0CA005235FA2BEC81698CB9A4B88A86C020162B8D879A75B95E694C4D761129E132B6B2E57A64FD6D9EB203B001E9DCFC90833A2D7AC3F2AC1B0652996277681B8F5067B3C619E49FF1EABBB87B1B71F096B67CA58082D590108BB49BF0B3F1CBC79001EFD51AC5345A6819A6CB1C27314B94E50F547F8343488AF75A5D29BD9E37B59276A13C8891149BB8237F491CF25EE96EC0FF73887E0C61303F7608C40B42FB51E50FE2377CB2AEB110D14D48EBD4117E5BB956AD807B6DB5E5057A7FD46FECC7D834D03781FEDCEFBDBF9BFDA494FCCAE21BC0EEE9CD10596097A4D715D1CDA8D260871C62363E04250916DF7D534563E8EB0D61478556C203523D662C90ACEC27612B40FA2966AA43CF34CA860792275F1'
     if not user:
-        await ctx.send('Please mention or enter the name of the user to rank.')
+        await ctx.send('Please enter the name or ID of the user to rank.')
         return
 
     # Connect to the Roblox group
@@ -379,13 +379,13 @@ async def rank(ctx, user: discord.Member = None):
 
     # Get the rank of the user in the group
     try:
-        member = group.get_member(user.name)
+        member = group.get_member(user)
         current_rank = group.get_rank(member.id)
         new_rank = current_rank + 1
         group.set_rank(member.id, new_rank)
-        await ctx.send(f'{user.mention} has been promoted to rank {new_rank} in the group.')
+        await ctx.send(f'{user} has been promoted to rank {new_rank} in the group.')
     except:
-        await ctx.send(f'{user.mention} is not a member of the group.')
+        await ctx.send(f'{user} is not a member of the group.')
 
 
 @client.command(name='help', brief='Shows information about various commands.')
