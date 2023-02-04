@@ -167,6 +167,12 @@ async def uban(ctx, member: discord.Member, *, reason=None):
 
 
 @client.command()
+@commands.has_role(760137391058059264)
+async def discserv(ctx):
+   for guild in client.guilds:
+        await ctx.send(f'The bot can be found in these guilds: {guild.name}')
+
+@client.command()
 @commands.has_role(970381430062456952)
 async def ssu(ctx):
     ssuChannel = client.get_channel(967478783764475924)
