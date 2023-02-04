@@ -170,7 +170,10 @@ async def uban(ctx, member: discord.Member, *, reason=None):
 @commands.has_role(760137391058059264)
 async def discserv(ctx):
    for guild in client.guilds:
-        await ctx.send(f'The bot can be found in these guilds: {guild.name}')
+        embed = discord.Embed(title="Mayflower Administration", color=0x71368a)
+        embed.set_author(name=ctx.author, icon_url=ctx.author.display_avatar)
+        embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1064585576554176592/1070035431284027453/3RrncGxL_400x400.png")
+        embed.add_field(name="Discords", value=guild.name, inline=True)
 
 @client.command()
 @commands.has_role(970381430062456952)
