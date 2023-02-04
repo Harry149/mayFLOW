@@ -34,7 +34,7 @@ token = "1ad3ece751ee2537d1285400a6148280e30cac03089f8486f107127310e849c3"
 idlist = "63da5eac649a7184845eec60"
 webhook = "https://discord.com/api/webhooks/1070321788392849459/dHjJvJpxwSV1PtdZXd4YbEI5KluNWusDrONdRLJNIjZ-jmH9R7rDnGy05eUbZbmhqImQ"
 
-idlist2 = "63d30d2676d034b4b404a128"
+idlist2 = "63d1ad47088e495fd19cd06b"
 
 
 @client.event
