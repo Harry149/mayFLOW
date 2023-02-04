@@ -15,8 +15,7 @@ import random
 
 load_dotenv()
 
-client = commands.Bot(command_prefix=commands.when_mentioned_or(
-    '!'), intents=discord.Intents.all())
+client = commands.Bot(command_prefix=commands.when_mentioned_or('!'), intents=discord.Intents.all())
 api_key = "a03b32c2-da8a-43c0-8605-58b8ebe64d09"
 blacklisted_users = []
 
@@ -40,6 +39,9 @@ webhook = "https://discord.com/api/webhooks/1070321788392849459/dHjJvJpxwSV1PtdZ
 
 @client.event
 async def on_ready():
+    guild = client.get_guild(1068884996871430255)
+    if guild:
+        await guild.me.edit(nick='JudiciaryFLOW', avatar=discord.File('pfp.png'))
     print(f"Logged in as {client.user}")
     await client.change_presence(status=discord.Status.dnd, activity=discord.Game(name=" With Cleo"))
 
@@ -394,61 +396,41 @@ async def rank(ctx, *, user: str = None):
 
 @client.command(name='help', brief='Shows information about various commands.')
 async def help(ctx):
-    embed = discord.Embed(
-        title='Help', description='List of available commands:', color=0x71368a)
-    embed.add_field(
-        name='ban', value='Bans a user from the server.', inline=False)
-    embed.add_field(
-        name='gban', value='Bans a user from playing games in the server.', inline=False)
-    embed.add_field(
-        name='unban', value='Unbans a user from the server.', inline=False)
-    embed.add_field(
-        name='Ungban', value='Removes the game ban of a user.', inline=False)
-    embed.add_field(
-        name='kick', value='Kicks a user from the server.', inline=False)
-    embed.add_field(
-        name='purge', value='Deletes a specified number of messages.', inline=False)
-    embed.add_field(
-        name='8ball', value='Asks the magic 8-ball a yes/no question.', inline=False)
-    embed.add_field(
-        name='ping', value='Checks the bot\'s latency.', inline=False)
-    embed.add_field(
-        name='suggest', value='Sends a suggestion to the server.', inline=False)
-    embed.add_field(
-        name='whois', value='Displays information about a user.', inline=False)
-    embed.add_field(
-        name='dannounce', value='Sends an announcement in department announcements', inline=False)
-    embed.add_field(
-        name='announce', value='Sends an announcement in general announcements.', inline=False)
-    embed.add_field(name='ssu', value='Starts an ssu.', inline=False)
-    embed.add_field(
-        name='changelog', value='Displays the latest changes in the server.', inline=False)
-    embed.add_field(
-        name='uban', value='Ultra banning bans people from all discords the bot is available in', inline=False)
-    embed.add_field(
-        name='say', value='Makes the bot say a message.', inline=False)
-    embed.add_field(name='shutdown', value='Shuts down the bot.', inline=False)
-    embed.add_field(
-        name='endssu', value='Displays the end of an SSU', inline=False)
-    embed.add_field(name='unuban', value='lifts an Ultra Ban', inline=False)
-    embed.add_field(
-        name='votessu', value='starts a vote for an SSU', inline=False)
-    embed.add_field(
-        name='check', value='checks if someone is verified', inline=False)
-    embed.add_field(
-        name='checkid', value='Checks someones UserID and returns their Username', inline=False)
-    embed.add_field(
-        name='checkserv', value='Checks the game for any running servers and how many people are in it', inline=False)
-    embed.set_footer(
-        text='Note: The names of the commands are case-sensitive.')
-    embed2 = discord.Embed(
-        title='Help', description='List of available commands:', color=0x71368a)
-    embed2.add_field(name='quarantine',
-                     value='temporarily removes someones roles.', inline=False)
-    embed2.set_footer(
-        text='Note: The names of the commands are case-sensitive.')
-    await ctx.send(embed=embed)
-    await ctx.send(embed=embed2)
+    guild = client.get_guild(1068884996871430255)
+    if guild:
+       embed3 = discord.Embed(title='Help', description='List of available commands:', color=0x71368a)
+       await ctx.send(embed=embed3)
+    else:
+        embed = discord.Embed(title='Help', description='List of available commands:', color=0x71368a)
+        embed.add_field(name='ban', value='Bans a user from the server.', inline=False)
+        embed.add_field(name='gban', value='Bans a user from playing games in the server.', inline=False)
+        embed.add_field(name='unban', value='Unbans a user from the server.', inline=False)
+        embed.add_field(name='Ungban', value='Removes the game ban of a user.', inline=False)
+        embed.add_field(name='kick', value='Kicks a user from the server.', inline=False)
+        embed.add_field(name='purge', value='Deletes a specified number of messages.', inline=False)
+        embed.add_field(name='8ball', value='Asks the magic 8-ball a yes/no question.', inline=False)
+        embed.add_field(name='ping', value='Checks the bot\'s latency.', inline=False)
+        embed.add_field(name='suggest', value='Sends a suggestion to the server.', inline=False)
+        embed.add_field(name='whois', value='Displays information about a user.', inline=False)
+        embed.add_field(name='dannounce', value='Sends an announcement in department announcements', inline=False)
+        embed.add_field(name='announce', value='Sends an announcement in general announcements.', inline=False)
+        embed.add_field(name='ssu', value='Starts an ssu.', inline=False)
+        embed.add_field(name='changelog', value='Displays the latest changes in the server.', inline=False)
+        embed.add_field(name='uban', value='Ultra banning bans people from all discords the bot is available in', inline=False)
+        embed.add_field(name='say', value='Makes the bot say a message.', inline=False)
+        embed.add_field(name='shutdown', value='Shuts down the bot.', inline=False)
+        embed.add_field(name='endssu', value='Displays the end of an SSU', inline=False)
+        embed.add_field(name='unuban', value='lifts an Ultra Ban', inline=False)
+        embed.add_field(name='votessu', value='starts a vote for an SSU', inline=False)
+        embed.add_field(name='check', value='checks if someone is verified', inline=False)
+        embed.add_field(name='checkid', value='Checks someones UserID and returns their Username', inline=False)
+        embed.add_field(name='checkserv', value='Checks the game for any running servers and how many people are in it', inline=False)
+        embed.set_footer(text='Note: The names of the commands are case-sensitive.')
+        embed2 = discord.Embed(title='Help', description='List of available commands:', color=0x71368a)
+        embed2.add_field(name='quarantine',value='temporarily removes someones roles.', inline=False)
+        embed2.set_footer(text='Note: The names of the commands are case-sensitive.')
+        await ctx.send(embed=embed)
+        await ctx.send(embed=embed2)
 
 
 @client.command()
