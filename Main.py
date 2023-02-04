@@ -1,7 +1,4 @@
-
-import pyblox
 import discord
-import robloxapi
 import os
 from discord.ext import commands
 import requests
@@ -366,7 +363,7 @@ async def servers(ctx, server_id: str = None):
         embed.description = f"There are currently {servers_count} servers."
         await ctx.send(embed=embed)
 
-@client.command(name='rank')
+'''@client.command(name='rank')
 @commands.has_role(760138708438876213)
 async def rank(ctx, *, user: str = None):
     group_id = 6987168
@@ -392,7 +389,7 @@ async def rank(ctx, *, user: str = None):
     # Promote the user by one rank
     new_rank = current_rank + 1
     member.Rank = new_rank
-    await ctx.send(f'{user} has been promoted to rank {new_rank} in the group.')
+    await ctx.send(f'{user} has been promoted to rank {new_rank} in the group.')'''
 
 
 @client.command(name='help', brief='Shows information about various commands.')
