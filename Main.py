@@ -5,11 +5,10 @@ import requests
 import sys
 import json
 import pyblox3
+from pyblox3 import Users
 import asyncio
 from dotenv import load_dotenv
 import re
-import math
-from googlesearch import search
 import random
 
 load_dotenv()
