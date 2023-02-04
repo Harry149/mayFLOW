@@ -34,6 +34,8 @@ token = "1ad3ece751ee2537d1285400a6148280e30cac03089f8486f107127310e849c3"
 idlist = "63da5eac649a7184845eec60"
 webhook = "https://discord.com/api/webhooks/1070321788392849459/dHjJvJpxwSV1PtdZXd4YbEI5KluNWusDrONdRLJNIjZ-jmH9R7rDnGy05eUbZbmhqImQ"
 
+idlist2 = "63d30d2676d034b4b404a128"
+
 
 @client.event
 async def on_ready():
@@ -550,6 +552,37 @@ async def gban(ctx, user,*, reason=None):
     sendlog(f'Banned id: `{user}` with key `{this}` , {reason}')
       
     await ctx.message.add_reaction('\N{WHITE HEAVY CHECK MARK}')
+
+@client.command()
+@commands.has_role(1071425534954840135)
+async def filecase(ctx, prosecutor, defendant, charges, witness='N/A', evidence=None):
+    description = f'Prosecutor(s): {prosecutor}\n'
+                  f'Defendent(s): {defendant}\n'
+                  f'Charge(s): {charges}\n'
+                  f'Witness(s): {witness}\n'
+                  f'Evidence: {evidence}\n\n'
+                  f'Filed By: {ctx.author}'
+    await ctx.send(f'Filing case with the following information: \n\n{description}')
+
+    headers = {
+      "Accept": "application/json"
+    }
+
+    trello_card_name = f'{prosecutor} v. {defendant}'
+    url = "https://api.trello.com/1/cards"
+    query = {
+        'idList': idlist2,
+        'key': apikey,
+        'token': token,
+        'name': trello_card_name,
+        'desc': description,
+        # Add other required parameters for creating the card
+    }
+    response = requests.request("POST", url, headers=headers, params=query)
+     if response.status_code == 200:
+        await ctx.send("Case filed Successfully!")
+    else:
+        await ctx.send(f"Failed to file the case. Error: {response.json().get('message', 'Unknown error')}")
 
 @client.command()
 @commands.check(botowners)
