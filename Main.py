@@ -579,7 +579,7 @@ async def filecase(ctx, prosecutor, defendant, charges, witness='N/A', evidence=
         # Add other required parameters for creating the card
     }
     response = requests.request("POST", url, headers=headers, params=query)
-     if response.status_code == 200:
+    if response.status_code == 200:
         await ctx.send("Case filed Successfully! Go on the trello and change the CaseNo and anything else.")
     else:
         await ctx.send(f"Failed to file the case. Error: {response.json().get('message', 'Unknown error')}")
