@@ -37,6 +37,9 @@ webhook = "https://discord.com/api/webhooks/1070321788392849459/dHjJvJpxwSV1PtdZ
 
 @client.event
 async def on_ready():
+    await client.user.edit(username='mayFLOW')
+    with open('pfp.png', 'rb') as f:
+            await client.user.edit(avatar=f.read())
     print(f"Logged in as {client.user}")
     await client.change_presence(status=discord.Status.dnd, activity=discord.Game(name=" With Cleo"))
 
