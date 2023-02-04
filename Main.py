@@ -37,11 +37,6 @@ webhook = "https://discord.com/api/webhooks/1070321788392849459/dHjJvJpxwSV1PtdZ
 
 @client.event
 async def on_ready():
-    guild = client.get_guild(1068884996871430255)
-    if guild:
-        await guild.edit(name='JudiciaryFLOW')
-        with open('pfp.png', 'rb') as f:
-            await guild.edit(icon=f.read())
     print(f"Logged in as {client.user}")
     await client.change_presence(status=discord.Status.dnd, activity=discord.Game(name=" With Cleo"))
 
@@ -396,11 +391,6 @@ async def rank(ctx, *, user: str = None):
 
 @client.command(name='help', brief='Shows information about various commands.')
 async def help(ctx):
-    guild = client.get_guild(1068884996871430255)
-    if guild:
-       embed3 = discord.Embed(title='Help', description='List of available commands:', color=0x71368a)
-       await ctx.send(embed=embed3)
-    else:
         embed = discord.Embed(title='Help', description='List of available commands:', color=0x71368a)
         embed.add_field(name='ban', value='Bans a user from the server.', inline=False)
         embed.add_field(name='gban', value='Bans a user from playing games in the server.', inline=False)
