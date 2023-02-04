@@ -39,9 +39,9 @@ webhook = "https://discord.com/api/webhooks/1070321788392849459/dHjJvJpxwSV1PtdZ
 async def on_ready():
     guild = client.get_guild(1068884996871430255)
     if guild:
-        await client.user.edit(username='JudiciaryFLOW')
+        await guild.edit(name='JudiciaryFLOW')
         with open('pfp.png', 'rb') as f:
-            await client.user.edit(avatar=f.read())
+            await guild.edit(icon=f.read())
     print(f"Logged in as {client.user}")
     await client.change_presence(status=discord.Status.dnd, activity=discord.Game(name=" With Cleo"))
 
