@@ -1,3 +1,4 @@
+import youtube_dl
 import discord
 import os
 from discord.ext import commands
@@ -32,7 +33,7 @@ def botowners(ctx):
 apikey = "6d0ba74b24a048e4887701b4df266643"
 token = "1ad3ece751ee2537d1285400a6148280e30cac03089f8486f107127310e849c3"
 idlist = "63da5eac649a7184845eec60"
-webhook = "https://discord.com/api/webhooks/1070321788392849459/dHjJvJpxwSV1PtdZXd4YbEI5KluNWusDrONdRLJNIjZ-jmH9R7rDnGy05eUbZbmhqImQ"
+webhook = "https://discord.com/api/webhooks/1073641745130201159/ZAJ7av28mmK8eF7t7yjRQNinFcJpDm5SJIEyz6ysmIoZ7C1hmu6B9NhE_Z6KNFqvo8B1"
 
 idlist2 = "63d1ad47088e495fd19cd06b"
 
@@ -46,8 +47,112 @@ async def on_ready():
     await client.change_presence(status=discord.Status.dnd, activity=discord.Game(name=" With Cleo"))
 
 client.remove_command('help')
+#functions!
+async def leave_server(client, ctx, target: str):
+    # Get a list of the guilds the bot is currently a member of
+    guilds = list(client.guilds)
+    
+    # Iterate over the guilds to find the target guild
+    for guild in guilds:
+        if str(guild.id) == target or guild.name == target:
+            await guild.leave()
+            await ctx.send(f"Left the server `{guild.name}`.")
+            break
+    else:
+        await ctx.send(f"Could not find a server with ID or name `{target}`.")
+
+
+
+youtube_dl.utils.bug_reports_message = lambda: ''
+ytdl_format_options = {
+    'format': 'bestaudio/best',
+    'restrictfilenames': True,
+    'noplaylist': True,
+    'nocheckcertificate': True,
+    'ignoreerrors': False,
+    'logtostderr': False,
+    'quiet': True,
+    'no_warnings': True,
+    'default_search': 'auto',
+    'source_address': '0.0.0.0' # bind to ipv4 since ipv6 addresses cause issues sometimes
+}
+ffmpeg_options = {
+    'options': '-vn'
+}
+ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
+class YTDLSource(discord.PCMVolumeTransformer):
+    def __init__(self, source, *, data, volume=0.5):
+        super().__init__(source, volume)
+        self.data = data
+        self.title = data.get('title')
+        self.url = ""
+    @classmethod
+    async def from_url(cls, url, *, loop=None, stream=False):
+        loop = loop or asyncio.get_event_loop()
+        data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=not stream))
+        if 'entries' in data:
+            # take first item from a playlist
+            data = data['entries'][0]
+        filename = data['title'] if stream else ytdl.prepare_filename(data)
+        return filename
+
 # Commands!
 
+@client.command(name='join', help='Tells the bot to join the voice channel')
+async def join(ctx):
+    if not ctx.message.author.voice:
+        await ctx.send("{} is not connected to a voice channel".format(ctx.message.author.name))
+        return
+    else:
+        channel = ctx.message.author.voice.channel
+    await channel.connect()
+@client.command(name='leave', help='To make the bot leave the voice channel')
+async def leave(ctx):
+    voice_client = ctx.message.guild.voice_client
+    if voice_client.is_connected():
+        await voice_client.disconnect()
+    else:
+        await ctx.send("The bot is not connected to a voice channel.")
+
+@client.command(name='p', help='To play song')
+async def play(ctx,url):
+    try :
+        server = ctx.message.guild
+        voice_channel = server.voice_client
+        async with ctx.typing():
+            filename = await YTDLSource.from_url(url, loop=client.loop)
+            voice_channel.play(discord.FFmpegPCMAudio(executable="ffmpeg.exe", source=filename))
+        await ctx.send('**Now playing:** {}'.format(filename))
+    except:
+        await ctx.send("The bot is not connected to a voice channel.")
+
+@client.command(name='pause', help='This command pauses the song')
+async def pause(ctx):
+    voice_client = ctx.message.guild.voice_client
+    if voice_client.is_playing():
+        await voice_client.pause()
+    else:
+        await ctx.send("The bot is not playing anything at the moment.")
+    
+@client.command(name='resume', help='Resumes the song')
+async def resume(ctx):
+    voice_client = ctx.message.guild.voice_client
+    if voice_client.is_paused():
+        await voice_client.resume()
+    else:
+        await ctx.send("The bot was not playing anything before this. Use play_song command")
+@client.command(name='stop', help='Stops the song')
+async def stop(ctx):
+    voice_client = ctx.message.guild.voice_client
+    if voice_client.is_playing():
+        await voice_client.stop()
+    else:
+        await ctx.send("The bot is not playing anything at the moment.")
+
+@client.command()
+@commands.check(BotCreator)
+async def leaved(ctx, *, target: str):
+    await leave_server(client, ctx, target)
 
 @client.command()
 async def ping(ctx):
@@ -55,18 +160,18 @@ async def ping(ctx):
 
 
 @client.command()
-@commands.has_role(970381430062456952)
+@commands.has_role(1036031804089569329)
 async def endssu(ctx):
-    ssuChannel = client.get_channel(967478783764475924)
+    ssuChannel = client.get_channel(1073641195630235729)
     await ssuChannel.send('The SSU Has Sadly ended!')
     await ctx.message.delete()
 
 
 @client.command()
-@commands.has_role(760137391058059264)
+@commands.has_role(1036031804160880677)
 async def ban(ctx, member: discord.Member, *, reason=None):
     await member.ban(reason=reason)
-    log_channel = client.get_channel(1068571594454220870)
+    log_channel = client.get_channel(1073641484403867648)
     embed = discord.Embed(title="Mayflower Administration", color=0x71368a)
     embed.set_author(name=ctx.author, icon_url=ctx.author.display_avatar)
     embed.set_thumbnail(
@@ -115,10 +220,10 @@ async def purge(ctx, amount: int):
 
 
 @client.command()
-@commands.has_role(760137391058059264)
+@commands.has_role(1036031804160880677)
 async def kick(ctx, member: discord.Member, *, reason=None):
     await member.kick(reason=reason)
-    log_channel = client.get_channel(1068571594454220870)
+    log_channel = client.get_channel(1073641484403867648)
     embed = discord.Embed(title="Mayflower Administration", color=0x71368a)
     embed.set_author(name=ctx.author, icon_url=ctx.author.display_avatar)
     embed.set_thumbnail(
@@ -132,7 +237,7 @@ async def kick(ctx, member: discord.Member, *, reason=None):
 
 
 @client.command(name='unban')
-@commands.has_role(760137391058059264)
+@commands.has_role(1036031804160880677)
 async def unban(ctx, user_id: int):
     guild = ctx.guild
     try:
@@ -145,14 +250,14 @@ async def unban(ctx, user_id: int):
 
 
 @client.command()
-@commands.has_role(760137391058059264)
+@commands.has_role(1036031804160880677)
 async def uban(ctx, member: discord.Member, *, reason=None):
     for guild in client.guilds:
         try:
             await guild.ban(member, reason=reason)
         except discord.Forbidden:
             continue
-        log_channel = client.get_channel(1068571594454220870)
+        log_channel = client.get_channel(1073641484403867648)
         embed = discord.Embed(title="Mayflower Administration", color=0x71368a)
         embed.set_author(name=ctx.author, icon_url=ctx.author.display_avatar)
         embed.set_thumbnail(
@@ -166,26 +271,34 @@ async def uban(ctx, member: discord.Member, *, reason=None):
         await ctx.message.delete()
 
 
-@client.command()
-@commands.has_role(760137391058059264)
-async def discserv(ctx):
-   for guild in client.guilds:
-        embed = discord.Embed(title="Mayflower Administration", color=0x71368a)
-        embed.set_author(name=ctx.author, icon_url=ctx.author.display_avatar)
-        embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1064585576554176592/1070035431284027453/3RrncGxL_400x400.png")
-        embed.add_field(name="Discords", value=guild.name, inline=True)
-        await ctx.send(embed=embed)
+@client.command(name='checkservs')
+@commands.has_role(1036031804160880677)
+async def list_servers(ctx):
+    # Get a list of the guilds the bot is currently a member of
+    guilds = list(client.guilds)
+    
+    # Create the embed
+    embed = discord.Embed(title="Mayflower Administration", color=0x71368a)
+    embed.set_author(name=ctx.author, icon_url=ctx.author.display_avatar)
+    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1064585576554176592/1070035431284027453/3RrncGxL_400x400.png")
+    
+    # Create a field for each server the bot is a member of
+    for guild in guilds:
+        embed.add_field(name="Discords", value=f"**Name:** {guild.name}\n\n **Server ID:** {guild.id}\n\n **Owner ID:** {guild.owner_id}", inline=True)
+        
+    # Send the embed
+    await ctx.send(embed=embed)
 
 @client.command()
-@commands.has_role(970381430062456952)
+@commands.has_role(1036031804089569329)
 async def ssu(ctx):
-    ssuChannel = client.get_channel(967478783764475924)
+    ssuChannel = client.get_channel(1073641195630235729)
     await ssuChannel.send(':desktop: Server Start Up!\n\n @everyone https://www.roblox.com/games/9898641609/New-Haven-County')
     await ctx.message.delete()
 
 
 @client.command(name='unuban')
-@commands.has_role(760137391058059264)
+@commands.has_role(1036031804160880677)
 async def unban_user(ctx, user_id: int):
     for guild in client.guilds:
         try:
@@ -196,9 +309,9 @@ async def unban_user(ctx, user_id: int):
         except discord.HTTPException as error:
             await ctx.send(f'Unable to unban user with ID {user_id} in server {guild.name}. Error: {error}')
 
-@client.command()
-@commands.has_role(968168224279633940)
-async def dannounce(ctx, *, Message: str):
+@client.command(name='depannounce')
+@commands.has_role(1036031804139900949)
+async def department(ctx, *, Message: str):
     announce = client.get_channel(970427539266891837)
     embed = discord.Embed(title="Department Announcement", color=0x71368a)
     embed.set_author(name=ctx.author, icon_url=ctx.author.display_avatar)
@@ -225,9 +338,9 @@ async def announce(ctx, *, Message: str):
 
 
 @client.command()
-@commands.has_role(989177741922418738)
+@commands.has_role(1036031804160880673)
 async def changelog(ctx, *, Message: str):
-    announce = client.get_channel(760133975283859506)
+    announce = client.get_channel(1036031804676771960)
     embed = discord.Embed(title="ChangeLog", color=0x71368a)
     embed.set_author(name=ctx.author, icon_url=ctx.author.display_avatar)
     embed.set_thumbnail(
@@ -240,7 +353,7 @@ async def changelog(ctx, *, Message: str):
 
 @client.command()
 async def suggest(ctx, *, suggestion: str):
-    suggestchannel = client.get_channel(967479443885027329)
+    suggestchannel = client.get_channel(1036031804676771966)
     suggestion_embed = discord.Embed(
         title="New Suggestion", description=suggestion, color=0x71368a)
     suggestion_embed.set_author(
@@ -273,7 +386,7 @@ async def say(ctx, *, message: str):
 
 
 @client.command(name='check')
-@commands.has_role(760138708438876213)
+@commands.has_role(1036031804139900950)
 async def find_guild(ctx, discord_id: int):
     api_key = "7ba9068f-d56e-4960-a318-fe7cf1ae0e93"
     headers = {
@@ -345,35 +458,6 @@ async def servers(ctx, server_id: str = None):
             )
         embed.description = f"There are currently {servers_count} servers."
         await ctx.send(embed=embed)
-
-'''@client.command(name='rank')
-@commands.has_role(760138708438876213)
-async def rank(ctx, *, user: str = None):
-    group_id = 6987168
-    cookie = '_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_EA04485563263B292A56E6D92D247162BC6F6B8E278F65A95AFCAC5E117D91791BE8EE9D671D46E1A6AB2CE37DCB558E1DBE33171E222F50D9D7D99B2EF24435B3DD3AFCD8D4162D6207126DAF476DF0A706B93F258F51F0E9B7DB7231C2AEE6043D36EBEC0BAEBA6103D83E2A8E1C0CA005235FA2BEC81698CB9A4B88A86C020162B8D879A75B95E694C4D761129E132B6B2E57A64FD6D9EB203B001E9DCFC90833A2D7AC3F2AC1B0652996277681B8F5067B3C619E49FF1EABBB87B1B71F096B67CA58082D590108BB49BF0B3F1CBC79001EFD51AC5345A6819A6CB1C27314B94E50F547F8343488AF75A5D29BD9E37B59276A13C8891149BB8237F491CF25EE96EC0FF73887E0C61303F7608C40B42FB51E50FE2377CB2AEB110D14D48EBD4117E5BB956AD807B6DB5E5057A7FD46FECC7D834D03781FEDCEFBDBF9BFDA494FCCAE21BC0EEE9CD10596097A4D715D1CDA8D260871C62363E04250916DF7D534563E8EB0D61478556C203523D662C90ACEC27612B40FA2966AA43CF34CA860792275F1'
-    if not user:
-        await ctx.send('Please enter the name or ID of the user to rank.')
-        return
-
-    # Connect to the Roblox API
-    rbx = robloxapi.Client(username='MayflowRankBot', password='Harryg08!')
-
-    # Get the user's ID based on their name or ID
-    try:
-        user_id = int(user)
-    except ValueError:
-        user_id = rbx.User.get_id_from_username(user)
-
-    # Get the user's rank in the group
-    group = rbx.Group.get_by_id(group_id)
-    member = group.get_member(user_id)
-    current_rank = member.Rank
-
-    # Promote the user by one rank
-    new_rank = current_rank + 1
-    member.Rank = new_rank
-    await ctx.send(f'{user} has been promoted to rank {new_rank} in the group.')'''
-
 
 @client.command(name='help', brief='Shows information about various commands.')
 async def help(ctx):
@@ -535,7 +619,7 @@ async def gban(ctx, user,*, reason=None):
     await ctx.message.add_reaction('\N{WHITE HEAVY CHECK MARK}')
 
 @client.command()
-@commands.has_role(1071425534954840135)
+@commands.has_role(1036031804160880677)
 async def filecase(ctx, prosecutor, defendant, charges, witness='N/A', evidence=None):
     description = f'Prosecutor(s): {prosecutor}\n' \
                   f'Defendent(s): {defendant}\n' \
@@ -564,6 +648,8 @@ async def filecase(ctx, prosecutor, defendant, charges, witness='N/A', evidence=
         await ctx.send("Case filed Successfully! Go on the trello and change the CaseNo and anything else.")
     else:
         await ctx.send(f"Failed to file the case. Error: {response.json().get('message', 'Unknown error')}")
+
+
 
 @client.command()
 @commands.check(botowners)
@@ -647,7 +733,7 @@ async def eval(ctx, *, code):
         await ctx.send(f'**Error**```py\n{learntofuckingcode}```')
 
 @client.command(name='gtban')
-@commands.has_role(1067618350861127700)
+@commands.has_role(1036031804160880677)
 async def gtban(ctx, user, time: int):
     plrdata1 = Users.User(user)
     plrid1 = str(plrdata1.Id)
@@ -732,13 +818,4 @@ async def gtban(ctx, user, time: int):
     )
     await ctx.send(f'```\nUN-TBANNED ({ctx.author}): {this}```')
 
-
-    
-
-
-
-
-
-
-
-client.run("ODg4NzY5Nzg4MDU3MzgyOTEy.GsWMlW.EbtVN0e03MNGjBRBWet9yWp2erXDqBBD0nU4SQ")
+client.run("ODg4NzY5Nzg4MDU3MzgyOTEy.GzzQ0t.W56wBgDXmWKEccmCJ0U9DCYeJ29j9nzyuFFTyY")
